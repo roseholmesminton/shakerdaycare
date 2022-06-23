@@ -419,12 +419,13 @@ mycursor = db.cursor()
 # print(x)
 
 # view all GUARDIAN records and fields
-# mycursor.execute("SELECT * FROM GUARDIAN")
-# myresult = mycursor.fetchall()
-# for x in myresult:
-#     x = panda.DataFrame(myresult, columns=['ID', 'First', 'MiddleInit', 'Last',
-#                         'CellPhone', 'WorkPhone', 'Ext', 'FeeDiscount', 'Address', 'Apt', 'City', 'State', 'Zip'])
-# print(x)
+def displayAllGuardians():
+    mycursor.execute("SELECT * FROM GUARDIAN")
+    myresult = mycursor.fetchall()
+    for x in myresult:
+        x = panda.DataFrame(myresult, columns=['ID', 'First', 'MiddleInit', 'Last',
+                                               'CellPhone', 'WorkPhone', 'Ext', 'FeeDiscount', 'Address', 'Apt', 'City', 'State', 'Zip'])
+    print(x)
 
 
 # view all CHILD records and fields
@@ -442,7 +443,7 @@ def displayAllChildren():
 print("*************************SHAKER DISCOVERY CENTER***************")
 print("***************************************************************")
 
-while(1):
+while(True):
     print("\n!=========================*************=======================!")
 
     print("! PLEASE ENTER 1 TO DISPLAY ALL CHILDREN                        |")
@@ -459,7 +460,7 @@ while(1):
     if choice == 1:
         displayAllChildren()
     elif choice == 2:
-        displayAllGuardian()
+        displayAllGuardians()
     elif choice == 3:
         displayALLGurdianChildren()
     elif choice == 4:

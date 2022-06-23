@@ -428,9 +428,51 @@ mycursor = db.cursor()
 
 
 # view all CHILD records and fields
-# mycursor.execute("SELECT * FROM CHILD")
-# myresult = mycursor.fetchall()
-# for x in myresult:
-#     x = panda.DataFrame(myresult, columns=['ID', 'First', 'Middle', 'Last', 'Gender', 'DOB',
-#                                         'Date_Started', 'Address', 'Apt', 'City', 'State', 'Zip', 'Status', 'Date_Inactive'])
-# print(x)
+def displayAllChildren():
+    mycursor.execute("SELECT * FROM CHILD")
+    myresult = mycursor.fetchall()
+    for x in myresult:
+        x = panda.DataFrame(myresult, columns=['ID', 'First', 'Middle', 'Last', 'Gender', 'DOB',
+                                               'Date_Started', 'Address', 'Apt', 'City', 'State', 'Zip', 'Status', 'Date_Inactive'])
+    print(x)
+
+
+# startup
+# MAIN SCREEN
+print("*************************SHAKER DISCOVERY CENTER***************")
+print("***************************************************************")
+
+while(1):
+    print("\n!=========================*************=======================!")
+
+    print("! PLEASE ENTER 1 TO DISPLAY ALL CHILDREN                        |")
+    print("! PLEASE ENTER 2 TO DISPLAY ALL GUARDIANS                       |")
+    print("! PLEASE ENTER 3 TO DISPLAY ALL GUARDIANS AND CHILDREN          |")
+    print("! PLEASE ENTER 4 TO SEARCH FOR A CHILD                          |")
+    print("! PLEASE ENTER 5 TO SEARCH FOR A GUARDIAN's CONTACT INFORMATION |")
+    print("! PLEASE ENTER 6 TO SEARCH FOR A CHILD's EMERGENCY CONTACT      |")
+    print("! PLEASE ENTER 7 TO ENROLL A NEW CHILD                          !")
+    print("! PLEASE ENTER 8 TO SET A CHILD TO INACTIVE                     !")
+    print("! PLEASE ENTER 9 TO EXIT                                        !")
+    print("\n!=====================*****THANK YOU*****=====================!")
+    choice = int(input("\n SELECTION : "))
+    if choice == 1:
+        displayAllChildren()
+    elif choice == 2:
+        displayAllGuardian()
+    elif choice == 3:
+        displayALLGurdianChildren()
+    elif choice == 4:
+        searchChild()
+    elif choice == 5:
+        searchGuardian()
+    elif choice == 6:
+        searchEmergencyContact()
+    elif choice == 7:
+        newChild()
+    elif choice == 8:
+        inactivateChild()
+    elif choice == 9:
+        break
+    else:
+        print("Sorry , Invalid input, Please Try Again !!! ")

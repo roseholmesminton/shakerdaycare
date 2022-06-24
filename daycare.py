@@ -466,8 +466,6 @@ mycursor = db.cursor()
 # print(mycursor.rowcount, "record inserted.")
 
 # view the Guardian Child Report
-
-
 def displayALLGurdianChildren():
     mycursor.execute("SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id = GUARDIANCHILD.Child_id  AND GUARDIAN.Guardian_id = GUARDIANCHILD.Guardian_ID")
     myresult = mycursor.fetchall()
@@ -476,13 +474,39 @@ def displayALLGurdianChildren():
             'GuardianFirst', 'GuardianLast', 'ChildFirst', 'ChildLast'])
     print(x)
 
-# view guardian monthly fee report
-# mycursor.execute("SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name, Round(datediff(now(), C_Dob)/30, 0) as Age_in_months, G_Fee_Discount, 1000-(1000*G_Fee_Discount) AS Monthly_Fee FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id=GUARDIANCHILD.Child_id  And GUARDIAN.Guardian_id=GUARDIANCHILD.Guardian_ID")
-# myresult = mycursor.fetchall()
-# for x in myresult:
-#     x = panda.DataFrame(
-#         myresult, columns=['GuardianFirst', 'GuardianLast', 'ChildFirst', 'ChildLast', 'AgeInMonths', 'FeeDiscount', 'MonthlyFee'])
-# print(x)
+# view one guardian's monthly fee
+
+
+def searchMonthlyFee():
+    global gid
+    gid = input("PLEASE ENTER PARENT ID : ")
+    sql = "SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name, Round(datediff(now(), C_Dob)/30, 0) as Age_in_months, G_Fee_Discount, 1000-(1000*G_Fee_Discount) AS Monthly_Fee FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id = GUARDIANCHILD.Child_id  And GUARDIAN.Guardian_id = GUARDIANCHILD.Guardian_ID AND GUARDIAN.Guardian_id = %s"
+    values = (gid,)
+    myresult = mycursor.execute(sql, values)
+    myresult = mycursor.fetchall()
+    if myresult:
+        print("\n***** GUARDIAN FEE INFORMATION*****")
+        x = panda.DataFrame(myresult, columns=[
+                            'GuardianFirst', 'GuardianLast', 'ChildFirst', 'ChildLast', 'AgeInMonths', 'FeeDiscount', 'MonthlyFee'])
+        print(x)
+    else:
+        print("Sorry Parent not found in the database, Please Try Again  ")
+
+
+def searchGuardian():
+    global gid
+    gid = input("PLEASE ENTER PARENT ID : ")
+    sql = "SELECT Guardian_id, G_First_Name, G_Last_Name, G_Cell_Phone, G_Work_Phone, G_W_Ext FROM GUARDIAN WHERE Guardian_id = %s"
+    values = (gid,)
+    myresult = mycursor.execute(sql, values)
+    myresult = mycursor.fetchall()
+    if myresult:
+        print("\n***** GUARDIAN CONTACT INFORMATION*****")
+        x = panda.DataFrame(myresult, columns=[
+            'ID', 'First', 'Last', 'CellPhone', 'WorkPhone', 'ext'])
+        print(x)
+    else:
+        print("Sorry Parent not found in the database, Please Try Again  ")
 
 # view all GUARDIAN records and fields
 
@@ -495,8 +519,9 @@ def displayAllGuardians():
                                                'CellPhone', 'WorkPhone', 'Ext', 'FeeDiscount', 'Address', 'Apt', 'City', 'State', 'Zip'])
     print(x)
 
-
 # view all CHILD records and fields
+
+
 def displayAllChildren():
     mycursor.execute("SELECT * FROM CHILD")
     myresult = mycursor.fetchall()
@@ -548,7 +573,7 @@ def searchEmergencyContact():
     if myresult:
         print("\n*****CHILD INFORMATION*****")
         x = panda.DataFrame(myresult, columns=[
-                            'ChildFName', 'ChildLName', 'ECFName', 'ECLName', 'ECCellPhone', 'ECWorkPhone', 'Ext'])
+            'ChildFName', 'ChildLName', 'ECFName', 'ECLName', 'ECCellPhone', 'ECWorkPhone', 'Ext'])
         print(x)
     else:
         print("Sorry Child not found in the database, Please Try Again  ")
@@ -567,20 +592,57 @@ def newChild():
     C_Address = input("Please Enter Child's Address : ")
     C_Apt = input("Please Enter Apt Number or None : ")
     C_City = input("Please Enter City: ")
-    C_State = input("Please Enter OH : ")
     C_Zip = input("Please Enter Zip Code : ")
-    C_Status = input("Please Enter Active : ")
-    C_Date_Inactive = input("Please Enter 0000-00-00 : ")
+    C_State = 'OH'
+    C_Status = 'Active'
+    C_Date_Inactive = 0000-00-00
     sql = 'INSERT INTO CHILD(C_First_Name, C_Middle_Name, C_Last_Name, C_Gender, C_DOB, C_Enrollment_Date, C_Address, C_Apt, C_City, C_State, C_Zip, C_Status, C_Date_Inactive) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
     values = (C_First_Name, C_Middle_Name, C_Last_Name, C_Gender, C_DOB, C_Enrollment_Date,
               C_Address, C_Apt, C_City, C_State, C_Zip, C_Status, C_Date_Inactive)
     mycursor.execute(sql, values)
-    # db.commit()
+
+    db.commit()
 
     print("\nNew Child Added Successfully!")
 
-    # startup
-    # MAIN SCREEN
+    Child_id = mycursor.lastrowid
+
+    print("\nNext we will add the Guardian informarion")
+
+    print("\nPlease Enter All The Information Carefully!")
+    G_First_Name = input("Please Enter Guardian's First Name : ")
+    G_Middle_Int = input("Please Enter Guardian's Middle Initial: ")
+    G_Last_Name = input("Please Enter Guardian's Last Name : ")
+    G_Cell_Phone = int(
+        input("Please Enter Guardians's Cell Phone (Numbers Only) or 0 for none: "))
+    G_Work_Phone = int(
+        input("Please Enter Guardian's: Work Phone (Numbers Only) or 0 for none : "))
+    G_W_Ext = int(
+        input("Please Enter Guardian's Work Extension or 0 for None : "))
+    G_Fee_Discount = 0
+    G_Address = C_Address
+    G_Apt = C_Apt
+    G_City = 'Cleveland'
+    G_State = 'OH'
+    G_Zip = C_Zip
+    sql = 'INSERT INTO Guardian (G_First_Name, G_Middle_Int, G_Last_Name, G_Cell_Phone, G_Work_Phone, G_W_Ext, G_Fee_Discount, G_Address, G_Apt, G_City, G_State, G_Zip) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    values = (G_First_Name, G_Middle_Int, G_Last_Name, G_Cell_Phone, G_Work_Phone,
+              G_W_Ext, G_Fee_Discount, G_Address, G_Apt, G_City, G_State, G_Zip)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nNew Guardian Added Successfully!")
+    Guardian_id = mycursor.lastrowid
+
+    sql = "INSERT INTO GUARDIANCHILD (Guardian_ID, Child_ID) VALUES (%s,%s)"
+    values = (Guardian_id, Child_id)
+    mycursor.execute(sql, values)
+
+    db.commit()
+    print("\nNew GuardianChild record Added Successfully!")
+
+
+# startup
+# MAIN SCREEN
 print("*************************SHAKER DISCOVERY CENTER***************")
 print("***************************************************************")
 
@@ -590,12 +652,13 @@ while(True):
     print("! PLEASE ENTER 1 TO DISPLAY ALL CHILDREN                        |")
     print("! PLEASE ENTER 2 TO DISPLAY ALL GUARDIANS                       |")
     print("! PLEASE ENTER 3 TO DISPLAY ALL GUARDIANS AND CHILDREN          |")
-    print("! PLEASE ENTER 4 TO SEARCH FOR A CHILD                          |")
-    print("! PLEASE ENTER 5 TO SEARCH FOR A GUARDIAN's CONTACT INFORMATION |")
-    print("! PLEASE ENTER 6 TO SEARCH FOR A CHILD's EMERGENCY CONTACT      |")
-    print("! PLEASE ENTER 7 TO ENROLL A NEW CHILD                          !")
-    print("! PLEASE ENTER 8 TO SET A CHILD TO INACTIVE                     !")
-    print("! PLEASE ENTER 9 TO EXIT                                        !")
+    print("! PLEASE ENTER 4 TO DiSPLAY GUARDIAN'S MONTHLY FEE              |")
+    print("! PLEASE ENTER 5 TO SEARCH FOR A CHILD                          |")
+    print("! PLEASE ENTER 6 TO SEARCH FOR A GUARDIAN's CONTACT INFORMATION |")
+    print("! PLEASE ENTER 7 TO SEARCH FOR A CHILD's EMERGENCY CONTACT      |")
+    print("! PLEASE ENTER 8 TO ENROLL A NEW CHILD                          !")
+    print("! PLEASE ENTER 9 TO SET A CHILD TO INACTIVE                     !")
+    print("! PLEASE ENTER 10 TO EXIT                                       !")
     print("!=====================*****THANK YOU*****=======================!")
     choice = int(input("\n SELECTION : "))
     if choice == 1:
@@ -605,16 +668,18 @@ while(True):
     elif choice == 3:
         displayALLGurdianChildren()
     elif choice == 4:
-        searchChild()
+        searchMonthlyFee()
     elif choice == 5:
-        searchGuardian()
+        searchChild()
     elif choice == 6:
-        searchEmergencyContact()
+        searchGuardian()
     elif choice == 7:
-        newChild()
+        searchEmergencyContact()
     elif choice == 8:
-        inactivateChild()
+        newChild()
     elif choice == 9:
+        inactivateChild()
+    elif choice == 10:
         break
     else:
         print("Sorry , Invalid input, Please Try Again !!! ")

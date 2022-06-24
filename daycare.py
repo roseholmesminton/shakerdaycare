@@ -402,13 +402,79 @@ mycursor = db.cursor()
 
 # print(mycursor.rowcount, "record inserted.")
 
+# create EMERGENCY CONTACT table
+# mycursor.execute("CREATE TABLE EMERGENCYCONTACT(EC_id int PRIMARY KEY AUTO_INCREMENT, EC_First_Name VARCHAR(255) NOT NULL, EC_Last_Name VARCHAR(255) NOT NULL, EC_Cell_Phone bigint NOT NULL, EC_Work_Phone bigint NOT NULL, EC_W_Ext int, Child_id int NOT NULL, FOREIGN KEY(Child_id) REFERENCES CHILD(Child_id))")
+
+# inserting records into Emergency Contact table
+# sql = "INSERT INTO  EMERGENCYCONTACT (EC_First_Name , EC_Last_Name , EC_Cell_Phone, EC_Work_Phone, EC_W_Ext , Child_id) VALUES (%s, %s, %s, %s, %s, %s)"
+# val = [
+#     ('Suriah',	'Jones',	4403671380,	2164215042,	None,	1),
+#     ('Delia',	'Kilpatrick',	4406146516,	2162866587,	None, 2),
+#     ('Drew',	'Ashurst',	4402876191, 2167519761,	None,	3),
+#     ('Evelyn',	'Garcia',	9097059785,	4409913078,	None,	4),
+#     ('Nelson',	'Ochulor',	4409151826,	2167519766,	None,	5),
+#     ("Ta'Nara",	'Arellano',	4409728515,	4407943428,	None,	6),
+#     ('Shaun',	'Clemens',	2167283959,	4404520801,	345,	7),
+#     ('Taylor',	'Willis',	4409913077,	4407604466,	None,	8),
+#     ('William',	'Brown',	4409915940,	2166013616,	None,	9),
+#     ('Susan',	'Brown',	4407943427, 2169456450,	None,	10),
+#     ('Jason',	'Buchanan',	2166176367,	4403736083, None,	11),
+#     ('Michelle',	'Buchanan',	4407604465, 2167211883,	None,	12),
+#     ('Lawrence',	'Burton',	2167519751, 2167517230, None,	13),
+#     ('Ruth',	'Burton',	2167211882, 2165611508, None,	14),
+#     ('John',	'Carter',	2167519756, 2164811117, None,	15),
+#     ('Kathleen',	'Carter',	2165611507, 2165153619, None,	16),
+#     ('Francisco',	'Curry',	4404520800, 4403754663, None,	17),
+#     ('Belkyss',	'Curry',	2165153618, 2162800258, None,	18),
+#     ('Steven',	'Ferguson',	2166013615, 2166850303, 222,	19),
+#     ('Dawn',	'Ferguson',	2162800257, 2168347737, None,	20),
+#     ('Thomas',	'Friedman',	 4403736082, 2162427560, None,	21),
+#     ('Milan',	'Friedman',	2168347736, 2168835384, None,	22),
+#     ('Blaize',	'Fuller',	2167517229, 2166492221, None,	23),
+#     ('Ann',	'Fuller',	2168835383, 2168358429, None,	24),
+#     ('Ralph',	'Garcia',	2164811116, 2164439848, None,	25),
+#     ('Justine',	'Garcia',	2168358428, 2167780501, None,	26),
+#     ('Dylan',	'Gilmore',	4403754662, 2167987182, None,	27),
+#     ('Brenna',	'Gilmore',	2167780500, 4403390846, None,	28),
+#     ('Allan',	'Hansen',	2166850302, 4406146518, None,	29),
+#     ('Christine',	'Hansen',	4403390845, 2167517231, None,	30),
+#     ('Donald',	'Hart',	2162427559, 3147059787, None,	31),
+#     ('Odessa',	'Hart',	2167517230, 2163988143, None,	32),
+#     ('Raymond',	'Hernandez',	2166492220, 4409728517, None,	33),
+#     ('Ruby',	'Hernandez',	2163988142, 4408762661, None,	34),
+#     ('Terence',	'Holt',	2164439847, 2167283961, None,	35),
+#     ('Bonnie',	'Holt',	4408762660, 2164863319, None,	36),
+#     ('Eugene',	'Huang',	2167987181, 4409915942, None,	37),
+#     ('Jennifer',	'Huang',	2164863318, 2164799979, None,	38),
+#     ('Darryl',	'Hudson',	4406146517, 2166176369, None,	39),
+#     ('Lynne',	'Hudson',	2164799978, 2168557289, None,	40),
+#     ('John',	'Jackson',	2167059786, 2164215043, None,	41),
+#     ('Yuli',	'Jackson',	2168557288, 5310285732, None,	42),
+#     ('David',	'Johnson',	4409728516, 2167519771, None,	43),
+#     ('Jessica',	'Johnson',	4408754232, 5535668607, None,	44),
+#     ('Steve',	'Kane',	2167283960, 2167519776, None,	45),
+#     ('Rio',	'Kane',	2164137107, 5761051482, None,	46),
+#     ('Mark',	'Kelly',	4409915941, 4404520802, None,	47),
+#     ('Tammy',	'Kelly',	4409519982, 5986434357, None,	48),
+#     ('Savannah',	'Lee',	2166176368, 2166013617, None,	49),
+#     ('Richard',	'Lee',	2164902857, 2162866588, None,	50),
+# ]
+# mycursor.executemany(sql, val)
+
+# db.commit()
+
+# print(mycursor.rowcount, "record inserted.")
+
 # view the Guardian Child Report
-# mycursor.execute("SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id = GUARDIANCHILD.Child_id  AND GUARDIAN.Guardian_id = GUARDIANCHILD.Guardian_ID")
-# myresult = mycursor.fetchall()
-# for x in myresult:
-#     x = pd.DataFrame(myresult, columns=[
-#         'GuardianFirst', 'GuardianLast', 'ChildFirst', 'ChildLast'])
-# print(x)
+
+
+def displayALLGurdianChildren():
+    mycursor.execute("SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id = GUARDIANCHILD.Child_id  AND GUARDIAN.Guardian_id = GUARDIANCHILD.Guardian_ID")
+    myresult = mycursor.fetchall()
+    for x in myresult:
+        x = panda.DataFrame(myresult, columns=[
+            'GuardianFirst', 'GuardianLast', 'ChildFirst', 'ChildLast'])
+    print(x)
 
 # view guardian monthly fee report
 # mycursor.execute("SELECT G_First_Name, G_Last_Name, C_First_Name, C_Last_Name, Round(datediff(now(), C_Dob)/30, 0) as Age_in_months, G_Fee_Discount, 1000-(1000*G_Fee_Discount) AS Monthly_Fee FROM CHILD, GUARDIAN, GUARDIANCHILD WHERE CHILD.Child_id=GUARDIANCHILD.Child_id  And GUARDIAN.Guardian_id=GUARDIANCHILD.Guardian_ID")
@@ -419,6 +485,8 @@ mycursor = db.cursor()
 # print(x)
 
 # view all GUARDIAN records and fields
+
+
 def displayAllGuardians():
     mycursor.execute("SELECT * FROM GUARDIAN")
     myresult = mycursor.fetchall()
@@ -438,13 +506,86 @@ def displayAllChildren():
     print(x)
 
 
-# startup
-# MAIN SCREEN
+def searchChild():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    sql = "SELECT * FROM CHILD WHERE Child_id = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    myresult = mycursor.fetchall()
+    if myresult:
+        print("\n*****CHILD INFORMATION*****")
+        x = panda.DataFrame(myresult, columns=['ID', 'First', 'Middle', 'Last', 'Gender', 'DOB',
+                                               'Date_Started', 'Address', 'Apt', 'City', 'State', 'Zip', 'Status', 'Date_Inactive'])
+        print(x)
+    else:
+        print("Sorry Child not found in the database, Please Try Again  ")
+
+
+def searchGuardian():
+    global gid
+    gid = input("PLEASE ENTER PARENT ID : ")
+    sql = "SELECT Guardian_id, G_First_Name, G_Last_Name, G_Cell_Phone, G_Work_Phone, G_W_Ext FROM GUARDIAN WHERE Guardian_id = %s"
+    values = (gid,)
+    myresult = mycursor.execute(sql, values)
+    myresult = mycursor.fetchall()
+    if myresult:
+        print("\n***** GUARDIAN CONTACT INFORMATION*****")
+        x = panda.DataFrame(myresult, columns=[
+            'ID', 'First', 'Last', 'CellPhone', 'WorkPhone', 'ext'])
+        print(x)
+    else:
+        print("Sorry Parent not found in the database, Please Try Again  ")
+
+
+def searchEmergencyContact():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    sql = "SELECT C_First_Name, C_Last_Name, EC_First_Name, EC_Last_Name, EC_Cell_Phone, EC_Work_Phone, EC_W_Ext FROM CHILD INNER JOIN EMERGENCYCONTACT ON CHILD.Child_id = EMERGENCYCONTACT.Child_id WHERE CHILD.Child_id  = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    myresult = mycursor.fetchall()
+    if myresult:
+        print("\n*****CHILD INFORMATION*****")
+        x = panda.DataFrame(myresult, columns=[
+                            'ChildFName', 'ChildLName', 'ECFName', 'ECLName', 'ECCellPhone', 'ECWorkPhone', 'Ext'])
+        print(x)
+    else:
+        print("Sorry Child not found in the database, Please Try Again  ")
+
+       # Enrol New Child
+
+
+def newChild():
+    print("\nPlease Enter All The Information Carefully!")
+    C_First_Name = input("Please Enter Child's First Name : ")
+    C_Middle_Name = input("Please Enter Child's Middle Name : ")
+    C_Last_Name = input("Please Enter Child's Last Name : ")
+    C_Gender = input("Please Enter Child's Gender : ")
+    C_DOB = input("Please Enter Child's Date of Birth as YYYY-MM-DD : ")
+    C_Enrollment_Date = input("Please Enter Start Date as YYYY-MM-DD : ")
+    C_Address = input("Please Enter Child's Address : ")
+    C_Apt = input("Please Enter Apt Number or None : ")
+    C_City = input("Please Enter City: ")
+    C_State = input("Please Enter OH : ")
+    C_Zip = input("Please Enter Zip Code : ")
+    C_Status = input("Please Enter Active : ")
+    C_Date_Inactive = input("Please Enter 0000-00-00 : ")
+    sql = 'INSERT INTO CHILD(C_First_Name, C_Middle_Name, C_Last_Name, C_Gender, C_DOB, C_Enrollment_Date, C_Address, C_Apt, C_City, C_State, C_Zip, C_Status, C_Date_Inactive) values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    values = (C_First_Name, C_Middle_Name, C_Last_Name, C_Gender, C_DOB, C_Enrollment_Date,
+              C_Address, C_Apt, C_City, C_State, C_Zip, C_Status, C_Date_Inactive)
+    mycursor.execute(sql, values)
+    # db.commit()
+
+    print("\nNew Child Added Successfully!")
+
+    # startup
+    # MAIN SCREEN
 print("*************************SHAKER DISCOVERY CENTER***************")
 print("***************************************************************")
 
 while(True):
-    print("\n!=========================*************=======================!")
+    print("\n!=========================*************=========================!")
 
     print("! PLEASE ENTER 1 TO DISPLAY ALL CHILDREN                        |")
     print("! PLEASE ENTER 2 TO DISPLAY ALL GUARDIANS                       |")
@@ -455,7 +596,7 @@ while(True):
     print("! PLEASE ENTER 7 TO ENROLL A NEW CHILD                          !")
     print("! PLEASE ENTER 8 TO SET A CHILD TO INACTIVE                     !")
     print("! PLEASE ENTER 9 TO EXIT                                        !")
-    print("\n!=====================*****THANK YOU*****=====================!")
+    print("!=====================*****THANK YOU*****=======================!")
     choice = int(input("\n SELECTION : "))
     if choice == 1:
         displayAllChildren()

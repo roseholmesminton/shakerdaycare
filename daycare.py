@@ -654,11 +654,23 @@ def inactivateChild():
 def removeChild():
     global cid
     cid = input("PLEASE ENTER CHILD ID : ")
-    sql = "Delete FROM CHILD WHERE Child_id = %s"
+    sql = "DELETE FROM EMERGENCYCONTACT WHERE Child_id = %s"
     values = (cid,)
     myresult = mycursor.execute(sql, values)
+    print("\nChild removed from EMERGENCYCONTACT table")
     db.commit()
-    print("Child removed from table")
+
+    sql = "DELETE FROM GUARDIANCHILD WHERE Child_id = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    print("\nChild removed from GUARDIANCHILD table")
+    db.commit()
+
+    sql = "DELETE FROM CHILD WHERE Child_id = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    print("\nChild removed from CHILD table")
+    db.commit()
 
 
 # startup

@@ -641,6 +641,26 @@ def newChild():
     print("\nNew GuardianChild record Added Successfully!")
 
 
+def inactivateChild():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    sql = "Update CHILD SET C_Status = 'Inactive' WHERE Child_id = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child updated")
+
+
+def removeChild():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    sql = "Delete FROM CHILD WHERE Child_id = %s"
+    values = (cid,)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child removed from table")
+
+
 # startup
 # MAIN SCREEN
 print("*************************SHAKER DISCOVERY CENTER***************")
@@ -658,7 +678,8 @@ while(True):
     print("! PLEASE ENTER 7 TO SEARCH FOR A CHILD's EMERGENCY CONTACT      |")
     print("! PLEASE ENTER 8 TO ENROLL A NEW CHILD                          !")
     print("! PLEASE ENTER 9 TO SET A CHILD TO INACTIVE                     !")
-    print("! PLEASE ENTER 10 TO EXIT                                       !")
+    print("! PLEASE ENTER 10 TO REMOVE A CHILD                             !")
+    print("! PLEASE ENTER 11 TO EXIT                                       !")
     print("!=====================*****THANK YOU*****=======================!")
     choice = int(input("\n SELECTION : "))
     if choice == 1:
@@ -680,6 +701,8 @@ while(True):
     elif choice == 9:
         inactivateChild()
     elif choice == 10:
+        removeChild()
+    elif choice == 11:
         break
     else:
         print("Sorry , Invalid input, Please Try Again !!! ")

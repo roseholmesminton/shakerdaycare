@@ -7,7 +7,7 @@ panda.set_option('display.max_columns', None)
 panda.set_option('display.width', 1000)
 
 db = mysql.connector.connect(
-    host="localhost",  # jdbc: mysql: // localhost: 3306 /?user = root
+    host="localhost",
     user="root",
     passwd="corbla99",
     database="shakerdiscoverycenter")
@@ -560,7 +560,7 @@ def searchGuardian():
             'ID', 'First', 'Last', 'CellPhone', 'WorkPhone', 'ext'])
         print(x)
     else:
-        print("Sorry Parent not found in the database, Please Try Again  ")
+        print("Sorry Guardian not found in the Guardian Table, Please Try Again  ")
 
 
 def searchEmergencyContact():
@@ -576,7 +576,7 @@ def searchEmergencyContact():
             'ChildFName', 'ChildLName', 'ECFName', 'ECLName', 'ECCellPhone', 'ECWorkPhone', 'Ext'])
         print(x)
     else:
-        print("Sorry Child not found in the database, Please Try Again  ")
+        print("Sorry Child not found in the Emergency Contact Table, Please Try Again  ")
 
        # Enrol New Child
 
@@ -607,7 +607,7 @@ def newChild():
 
     Child_id = mycursor.lastrowid
 
-    print("\nNext we will add the Guardian informarion")
+    print("\nAdd the Child's Guardian information")
 
     print("\nPlease Enter All The Information Carefully!")
     G_First_Name = input("Please Enter Guardian's First Name : ")
@@ -640,6 +640,25 @@ def newChild():
     db.commit()
     print("\nNew GuardianChild record Added Successfully!")
 
+    print("\nAdd the Child's Emergency Contact information")
+
+    print("\nPlease Enter All The Information Carefully!")
+    EC_First_Name = input("Please Enter the Emergency Contact's First Name : ")
+    EC_Last_Name = input("Please Enter the Emergency Contact's Last Name : ")
+    EC_Cell_Phone = int(
+        input("Please Enter Emergency Contact's Cell Phone (Numbers Only) or 0 for none: "))
+    EC_Work_Phone = int(
+        input("Please Enter Emergency Contact's Work Phone (Numbers Only) or 0 for none : "))
+    EC_W_Ext = int(
+        input("Please Enter Emergency Contact's Work Extension or 0 for None : "))
+
+    sql = 'INSERT INTO EMERGENCYCONTACT(EC_First_Name, EC_Last_Name, EC_Cell_Phone, EC_Work_Phone, EC_W_Ext, Child_id) values(%s, %s, %s, %s, %s, %s)'
+    values = (EC_First_Name, EC_Last_Name, EC_Cell_Phone, EC_Work_Phone,
+              EC_W_Ext, Child_id)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nNew Emergency Contact Added Successfully!")
+
 
 def inactivateChild():
     global cid
@@ -649,6 +668,176 @@ def inactivateChild():
     myresult = mycursor.execute(sql, values)
     db.commit()
     print("Child updated")
+
+
+def updatechildfn():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    C_First_Name = input("Please Enter New First Name : ")
+    sql = "Update CHILD SET C_First_Name = %s WHERE Child_id = %s"
+    values = (C_First_Name, cid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child's first name updated")
+
+
+def updatechildmn():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    C_Middle_Name = input("Please Enter New Middle Name : ")
+    sql = "Update CHILD SET C_Middle_Name = %s WHERE Child_id = %s"
+    values = (C_Middle_Name, cid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child's middle name updated")
+
+
+def updatechildln():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    C_Last_Name = input("Please Enter New Last Name : ")
+    sql = "Update CHILD SET C_Last_Name = %s WHERE Child_id = %s"
+    values = (C_Last_Name, cid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child's last name updated")
+
+
+def updatechildaddress():
+    global cid
+    cid = input("PLEASE ENTER CHILD ID : ")
+    C_Address = input("Please Enter New Address : ")
+    C_Apt = input(" Please Enter New Apt or None : ")
+    C_City = input("Please Enter City : ")
+    C_Zip = input("Please Enter Zip Code : ")
+    C_State = 'OH'
+    sql = "Update CHILD SET C_Address = %s, C_Apt = %s, C_Zip = %s, C_State = %s WHERE Child_id = %s"
+    values = (C_Address, C_Apt, C_Zip, C_State, cid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Child's address updated")
+
+
+def updateguardianfn():
+    global gid
+    gid = input("PLEASE ENTER GUARDIAN ID : ")
+    G_First_Name = input("Please Enter New First Name : ")
+    sql = "Update GUARDIAN SET G_First_Name = %s WHERE Guardian_id = %s"
+    values = (G_First_Name, gid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's first name updated")
+
+
+def updateguardianmnit():
+    global gid
+    gid = input("PLEASE ENTER GUARDIAN ID : ")
+    C_Middle_Initial = input("Please Enter New Middle Initial : ")
+    sql = "Update GUARDIAN SET G_Middle_Initial = %s WHERE Guardian_id = %s"
+    values = (C_Middle_Initial, gid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's middle initial updated")
+
+
+def updateguardianln():
+    global gid
+    gid = input("PLEASE ENTER GUARDIAN ID : ")
+    G_Last_Name = input("Please Enter New Last Name : ")
+    sql = "Update GUARDIAN SET G_Last_Name = %s WHERE Guardian_id = %s"
+    values = (G_Last_Name, cid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's last name updated")
+
+
+def updateguardianaddress():
+    global gid
+    gid = input("PLEASE ENTER Guardian ID : ")
+    G_Address = input("Please Enter New Address : ")
+    G_Apt = input(" Please Enter New Apt or None : ")
+    G_City = input("Please Enter New City: ")
+    G_Zip = input("Please Enter New Zip Code : ")
+    G_State = 'OH'
+    sql = "Update GUARDIAN SET G_Address = %s, G_Apt = %s, G_Zip = %s, G_State = %s WHERE Child_id = %s"
+    values = (G_Address, G_Apt, G_Zip, G_State, gid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's address updated")
+
+
+def updateguardiancell():
+    global gid
+    gid = input("PLEASE ENTER Guardian ID : ")
+    G_Cell_Phone = int(
+        input("Please Enter Guardian's New Cell Phone (Numbers Only) : "))
+    sql = "Update GUARDIAN SET G_Cell_Phone = %s WHERE Child_id = %s"
+    values = (G_Cell_Phone, gid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's cell phone updated")
+
+
+def updateguardianwp():
+    global gid
+    gid = input("PLEASE ENTER Guardian ID : ")
+    G_Work_Phone = int(
+        input("Please Enter Guardian's New Work Phone (Numbers Only) : "))
+    G_W_Ext = int(
+        input("Please Enter Guardians' New Work Extenion or 0 for None : "))
+    sql = "Update GUARDIAN SET G_Work_Phone = %s, G_W_Ext = %s WHERE Child_id = %s"
+    values = (G_Work_Phone, G_W_Ext, gid)
+    myresult = mycursor.execute(sql, values)
+    db.commit()
+    print("Guardian's work phone updated")
+
+
+def updateecfn():
+    global cid
+    cid = input("PLEASE ENTER the Child ID for the Emergency Contact : ")
+    EC_First_Name = input("Please Enter Emergency Contact's New First Name : ")
+    sql = 'Update EMERGENCYCONTACT SET EC_First_Name = %s WHERE Child_id = %s'
+    values = (EC_First_Name, cid)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nEmergency Contact's first name updated")
+
+
+def updateecln():
+    global cid
+    cid = input("PLEASE ENTER the Child ID for the Emergency Contact : ")
+    EC_Last_Name = input("Please Enter Emergency Contact's New Last Name : ")
+    sql = 'Update EMERGENCYCONTACT SET EC_Last_Name = %s WHERE Child_id = %s'
+    values = (EC_Last_Name, cid)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nEmergency Contact's last name updated")
+
+
+def updateeccell():
+    global cid
+    cid = input("PLEASE ENTER the Child ID for the Emergency Contact : ")
+    EC_Cell_Phone = int(input(
+        "Please Enter Emergency Contact's New Cell Phone (Numbers Only) or 0 for none : "))
+    sql = 'Update EMERGENCYCONTACT SET EC_Cell_Phone = %s WHERE Child_id = %s'
+    values = (EC_Cell_Phone, cid)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nEmergency Contact's cell phone updated")
+
+
+def updateecwp():
+    global cid
+    cid = input("PLEASE ENTER the Child ID for the Emergency Contact")
+    C_Work_Phone = int(input(
+        "Please Enter Emergency Contact's New Work Phone (Numbers Only) or 0 for none : "))
+    EC_W_Ext = int(
+        input("Please Enter Emergency Contact's New Work Extension or 0 for None : "))
+    sql = 'Update EMERGENCYCONTACT SET EC_Work_Phone = %s, EC_W_Ext = %s WHERE Child_id = %s'
+    values = (EC_Work_Phone, EC_W_Ext, cid)
+    mycursor.execute(sql, values)
+    db.commit()
+    print("\nEmergency Contact's work phone updated")
 
 
 def removeChild():
@@ -673,48 +862,124 @@ def removeChild():
     db.commit()
 
 
+def updateInformation():
+    while(True):
+        print("***************UPDATE MENU***************")
+        print("\t1 Update child information")
+        print("\t2 Update guardian information")
+        print("\t3 Update emergency contact information")
+        print("\t4 RETURN")
+        choice = int(input("\n SELECTION : "))
+        if choice == 1:
+            while(True):
+                print("Update child information")
+                print(
+                    "Enter 1. Update first name, 2. Update middle name, 3. Update last name, 4. Update address, 5. Set Child's status to inactive, 6. RETURN")
+                choice = int(input("\n SELECTION : "))
+                if choice == 1:
+                    updatechildfn()
+                elif choice == 2:
+                    updatechildmn()
+                elif choice == 3:
+                    updatechildln()
+                elif choice == 4:
+                    updatechildaddress()
+                elif choice == 5:
+                    inactivateChild()
+                elif choice == 6:
+                    break
+                else:
+                    print("Invalid input, please try again")
+        elif choice == 2:
+            while(True):
+                print("Update guardian information")
+                print(
+                    "Enter 1. Update first name, 2. Update middle initial, 3. Update last name,  4. Update address, 5. Update cell phone, 6. Update work phone, 7. update guardian discount, 8. RETURN")
+                choice = int(input("\n SELECTION : "))
+                if choice == 1:
+                    updateguardianfn()
+                elif choice == 2:
+                    updateguardianmint()
+                elif choice == 3:
+                    updateguardianln()
+                elif choice == 4:
+                    updateguardianaddress()
+                elif choice == 5:
+                    updateguardiancell()
+                elif choice == 6:
+                    updateguardianwp()
+                elif choice == 7:
+                    updateguardiandiscount()
+                elif choice == 8:
+                    break
+                else:
+                    print("Invalid input, please try again")
+        elif choice == 3:
+            while(True):
+                print("Update emergency contact information")
+                print(
+                    "Enter 1. Update first name, 2. Update last name 3. Update cell phone 4. Update work phone 5. RETURN")
+                choice = int(input("\n SELECTION : "))
+                if choice == 1:
+                    updateecfn()
+                elif choice == 2:
+                    updateecln()
+                elif choice == 3:
+                    updateeccell()
+                elif choice == 4:
+                    updateecwp()
+                elif choice == 5:
+                    break
+                else:
+                    print("Invalid input, please try again")
+        elif choice == 4:
+            break
+        else:
+            print("Invalid input, please try again")
+
 # startup
 # MAIN SCREEN
-print("*************************SHAKER DISCOVERY CENTER***************")
-print("***************************************************************")
 
-while(True):
-    print("\n!=========================*************=========================!")
 
-    print("! PLEASE ENTER 1 TO DISPLAY ALL CHILDREN                        |")
-    print("! PLEASE ENTER 2 TO DISPLAY ALL GUARDIANS                       |")
-    print("! PLEASE ENTER 3 TO DISPLAY ALL GUARDIANS AND CHILDREN          |")
-    print("! PLEASE ENTER 4 TO DiSPLAY GUARDIAN'S MONTHLY FEE              |")
-    print("! PLEASE ENTER 5 TO SEARCH FOR A CHILD                          |")
-    print("! PLEASE ENTER 6 TO SEARCH FOR A GUARDIAN's CONTACT INFORMATION |")
-    print("! PLEASE ENTER 7 TO SEARCH FOR A CHILD's EMERGENCY CONTACT      |")
-    print("! PLEASE ENTER 8 TO ENROLL A NEW CHILD                          !")
-    print("! PLEASE ENTER 9 TO SET A CHILD TO INACTIVE                     !")
-    print("! PLEASE ENTER 10 TO REMOVE A CHILD                             !")
-    print("! PLEASE ENTER 11 TO EXIT                                       !")
-    print("!=====================*****THANK YOU*****=======================!")
-    choice = int(input("\n SELECTION : "))
-    if choice == 1:
-        displayAllChildren()
-    elif choice == 2:
-        displayAllGuardians()
-    elif choice == 3:
-        displayALLGurdianChildren()
-    elif choice == 4:
-        searchMonthlyFee()
-    elif choice == 5:
-        searchChild()
-    elif choice == 6:
-        searchGuardian()
-    elif choice == 7:
-        searchEmergencyContact()
-    elif choice == 8:
-        newChild()
-    elif choice == 9:
-        inactivateChild()
-    elif choice == 10:
-        removeChild()
-    elif choice == 11:
-        break
-    else:
-        print("Sorry , Invalid input, Please Try Again !!! ")
+def startup():
+    while(True):
+        print("***************SHAKER DISCOVERY CENTER***************")
+        print("\t1 Display all children")
+        print("\t2 Display all guardians")
+        print("\t3 Display all guardians and their children")
+        print("\t4 Display guardian's monthly fee")
+        print("\t5 Search for a child's record")
+        print("\t6 Search for a guardian's contact information")
+        print("\t7 Search for a child's emergeny contact")
+        print("\t8 Enroll a new child")
+        print("\t9 Update Information")
+        print("\t10 Remove a child from the database")
+        print("\t11 EXIT")
+        choice = int(input("\n SELECTION : "))
+        if choice == 1:
+            displayAllChildren()
+        elif choice == 2:
+            displayAllGuardians()
+        elif choice == 3:
+            displayALLGurdianChildren()
+        elif choice == 4:
+            searchMonthlyFee()
+        elif choice == 5:
+            searchChild()
+        elif choice == 6:
+            searchGuardian()
+        elif choice == 7:
+            searchEmergencyContact()
+        elif choice == 8:
+            newChild()
+        elif choice == 9:
+            updateInformation()
+        elif choice == 10:
+            removeChild()
+        elif choice == 11:
+            break
+        else:
+            print("Sorry , Invalid input, Please Try Again")
+
+
+startup()
